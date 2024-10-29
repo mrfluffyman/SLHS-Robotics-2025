@@ -1,0 +1,58 @@
+package org.firstinspires.ftc.teamcode;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import android.util.Size;
+@TeleOp(name = "Autonoumostest")
+
+public class Autonoumostest extends LinearOpMode {
+  private DcMotor flmotor;
+  private DcMotor frmotor;
+  private DcMotor blmotor;
+  private DcMotor brmotor;
+  private DistanceSensor testsensor;
+  private double Distance;
+    
+     @Override
+  public void runOpMode() {
+     flmotor = hardwareMap.get(DcMotor.class, "frontleft");
+    frmotor = hardwareMap.get(DcMotor.class, "frontright");
+    blmotor = hardwareMap.get(DcMotor.class, "backleft");
+    brmotor = hardwareMap.get(DcMotor.class, "backright");
+    testsensor = hardwareMap.get(DistanceSensor.class, "testsensor");
+    waitForStart();
+     
+   
+    while (opModeIsActive()) {
+      Distance = testsensor.getDistance(DistanceUnit.CM);
+    if (Distance > 30.00) {
+  
+       frmotor.setPower(0.5);
+        flmotor.setPower(-0.5);
+        brmotor.setPower(0.5);
+        blmotor.setPower(-0.5);
+    }
+    else{
+        frmotor.setPower(0);
+        flmotor.setPower(0);
+        brmotor.setPower(0);
+        blmotor.setPower(0);
+    }
+    }
+    
+  telemetry.update();
+        
+        
+         
+ telemetry.update();
+        telemetry.addData("Distance (cm)", testsensor.getDistance(DistanceUnit.CM));
+        telemetry.addData("Distance variable", Distance);
+        }
+}  
+
+
+    
