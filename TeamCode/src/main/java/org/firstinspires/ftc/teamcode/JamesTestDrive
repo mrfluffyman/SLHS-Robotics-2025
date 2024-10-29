@@ -1,0 +1,94 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+@TeleOp(name = "teleopdrivecontrols")
+public class JamesDriveTest extends LinearOpMode {
+  private DcMotor flmotor;
+  private DcMotor frmotor;
+  private DcMotor blmotor;
+  private DcMotor brmotor;
+   
+  @Override
+  public void runOpMode() {
+    flmotor = hardwareMap.get(DcMotor.class, "frontleft");
+    frmotor = hardwareMap.get(DcMotor.class, "frontright");
+    blmotor = hardwareMap.get(DcMotor.class, "backleft");
+    brmotor = hardwareMap.get(DcMotor.class, "backright");
+    double power=0;
+    double counter=0;
+    double fw=1;
+    double side=1;
+    double turn=1;
+    double multFw=0.5;
+    double multSide=0.5;
+    double multTurn=0.5;
+    boolean backVar=true;
+    waitForStart();
+      while (opModeIsActive()) {
+        if (gamepad1.dpad_down){gamepad1.left_stick_y=1;}
+        if (gamepad1.dpad_up){gamepad1.left_stick_y=-1;}
+        if (gamepad1.dpad_left){gamepad1.left_stick_x=-1;}
+        if (gamepad1.dpad_right){gamepad1.left_stick_x=1;}
+        if (gamepad1.b){
+          if (gamepad1.right_bumper){multTurn=0.25;}
+          if (gamepad1.left_trigger>0){multSide=0.25;}
+          if (gamepad1.right_trigger>0){multFw=0.25;}
+          if (gamepad1.left_bumper){multFw=0.25;multSide=0.25;multTurn=0.25;}}
+        if (gamepad1.a){
+          if (gamepad1.right_bumper){multTurn=0.5;}
+          if (gamepad1.left_trigger>0){multSide=0.5;}
+          if (gamepad1.right_trigger>0){multFw=0.5;} 
+          if (gamepad1.left_bumper){multFw=0.5;multSide=0.5;multTurn=0.5;};}
+        if (gamepad1.x){
+          if (gamepad1.right_bumper){multTurn=0.75;}
+          if (gamepad1.left_trigger>0){multSide=0.75;}
+           if (gamepad1.right_trigger>0){multFw=0.75;} 
+          if (gamepad1.left_bumper){multFw=0.75;multSide=0.75;multTurn=0.75;};}
+        if (gamepad1.y){
+          if (gamepad1.right_bumper){multTurn=1;}
+          if (gamepad1.left_trigger>0){multSide=1;}
+          if (gamepad1.right_trigger>0){multFw=1;} 
+          if (gamepad1.left_bumper){multFw=1;multSide=1;multTurn=1;};}
+        if (gamepad1.left_bumper){gamepad1.right_trigger=1;gamepad1.left_trigger=1;gamepad1.right_bumper=true;}
+        if(gamepad1.back){if(backVar){backVar=false;} else {backVar=true;};}
+        if(backVar){
+          if (gamepad1.right_bumper){turn=1;} else {turn=multTurn;}
+          fw=multFw+(1-multFw)*gamepad1.right_trigger;
+          side=multSide+(1-multSide)*gamepad1.left_trigger;}
+        else{
+          if (gamepad1.right_bumper){turn=multTurn;} else {turn=1;}
+          fw=multFw+(1-multFw)*(1-gamepad1.right_trigger);
+          side=multSide+(1-multSide)*(1-gamepad1.left_trigger);}
+        counter++;
+        power = gamepad1.left_stick_y;
+        flmotor.setPower(-(gamepad1.left_stick_y*fw-gamepad1.right_stick_x*turn));
+        frmotor.setPower(gamepad1.left_stick_y*fw+gamepad1.right_stick_x*turn);
+        blmotor.setPower(-(gamepad1.left_stick_y*fw-gamepad1.right_stick_x*turn));
+        brmotor.setPower(gamepad1.left_stick_y*fw+gamepad1.right_stick_x*turn);
+        flmotor.setPower(gamepad1.left_stick_x*side);
+        frmotor.setPower(gamepad1.left_stick_x*side);
+        blmotor.setPower(-(gamepad1.left_stick_x*side));
+        brmotor.setPower(-(gamepad1.left_stick_x*side));
+        telemetry.addData("Target Power", power);
+        telemetry.addData("Motor Power", flmotor.getPower());
+        telemetry.addData("Status", "Running");
+        telemetry.addData("Count", counter);
+        telemetry.addData("forward speed",multFw);
+        telemetry.addData("side speed",multSide);
+        telemetry.addData("turn speed",multTurn);
+        telemetry.addData("low speed default",backVar);
+        telemetry.update();
+        
+      } 
+    
+    }
+    
+    
+    
+    
+    
+    
+}
