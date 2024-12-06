@@ -1,0 +1,289 @@
+package org.firstinspires.ftc.teamcode;
+//  claw motor
+//-4600  slide
+// -595 claw
+// -1455 turn counterclockwise
+// -566 foward
+//-1602 strafe left
+//-463 foward
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+//import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+@TeleOp(name = "optimization")
+public class optimization extends LinearOpMode {
+  private DcMotor flmotor;
+  private DcMotor frmotor;
+  private DcMotor blmotor;
+  private DcMotor brmotor;
+  private Servo clawServo;
+  private DcMotor clawMotor;
+  private DcMotor pleft;
+  private DcMotor pright;
+  private DistanceSensor testsensor;
+  //private double Distance;
+  
+  //vyperslide variables:
+  private int toggleClaw;
+  private Boolean aDebounce;
+  private int toggleStartMode;
+  private Boolean yDebounce;
+  private double position;
+  private Boolean startMotors;
+   private double armposition;
+  private double target;
+  private void up()
+  {
+    while(pleft.getCurrentPosition()  > -4300){
+          
+            pleft.setPower(0.75);
+            pright.setPower(-0.75);
+          }
+            pleft.setPower(0.1);
+            pright.setPower(-0.1);
+          
+         sleep(1000);
+  }
+  private void down()
+  {
+           while(pleft.getCurrentPosition()  < -50){
+            pleft.setPower(-0.75);
+          pright.setPower(0.75);
+          }
+          pleft.setPower(0);
+          pright.setPower(0);
+        sleep(1000);
+  }
+  private void back()
+  {
+  while (testsensor.getDistance(DistanceUnit.CM) < 12){
+          telemetry.addData("distance",testsensor.getDistance(DistanceUnit.CM));
+          flmotor.setPower(-0.2);
+          frmotor.setPower(0.2);
+          brmotor.setPower(0.2);
+          blmotor.setPower(-0.2);
+    }
+      flmotor.setPower(0);
+          frmotor.setPower(0);
+          brmotor.setPower(0);
+          blmotor.setPower(0);
+        sleep(1000);
+  
+  
+  }
+  private void drive()
+  {
+    pleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frmotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pleft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        pright.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frmotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+  while (frmotor.getCurrentPosition() < target){
+          flmotor.setPower(0.2);
+          frmotor.setPower(-0.2);
+          brmotor.setPower(-0.2);
+          blmotor.setPower(0.2);
+    }
+      flmotor.setPower(0);
+          frmotor.setPower(0);
+          brmotor.setPower(0);
+          blmotor.setPower(0);
+        sleep(1000);
+  
+  
+  }
+  private void driveBack()
+  {
+        pleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frmotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pleft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        pright.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frmotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+  while (frmotor.getCurrentPosition() < 430){
+          flmotor.setPower(-0.2);
+          frmotor.setPower(0.2);
+          brmotor.setPower(0.2);
+          blmotor.setPower(-0.2);
+    }
+        flmotor.setPower(0);
+          frmotor.setPower(0);
+          brmotor.setPower(0);
+          blmotor.setPower(0);
+        sleep(1000);
+  
+  
+  }
+  
+  private void turn()
+  {
+      pleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frmotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pleft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        pright.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frmotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+  while (frmotor.getCurrentPosition() > -330){
+          flmotor.setPower(0);
+          frmotor.setPower(-0.2);
+        
+          brmotor.setPower(-0.2);
+          blmotor.setPower(-0.2);
+    }
+      flmotor.setPower(0);
+          frmotor.setPower(0);
+          brmotor.setPower(0);
+          blmotor.setPower(0);
+        sleep(1000);
+  
+  
+  }
+  private void armdown()
+  {
+    while (armposition > -12.5){ //440
+     clawMotor.setPower(-0.2);
+      armposition += clawMotor.getPower();
+        telemetry.addData("PLeft Position:", pleft.getCurrentPosition());
+      telemetry.addData("PRight Position:", pright.getCurrentPosition());
+      telemetry.addData("clawMotor Position:", clawMotor.getCurrentPosition());
+      telemetry.addData("clawMotor variable", armposition);
+      telemetry.update();
+      
+    }
+    clawMotor.setPower(0.075);
+  }
+  private void armup()
+  {
+    while (armposition < -10){ 
+     clawMotor.setPower(0.25);
+     armposition += clawMotor.getPower();
+       telemetry.addData("PLeft Position:", pleft.getCurrentPosition());
+      telemetry.addData("PRight Position:", pright.getCurrentPosition());
+      telemetry.addData("clawMotor Position:", clawMotor.getCurrentPosition());
+      telemetry.addData("clawMotor variable", armposition);
+      telemetry.update();
+    }
+    clawMotor.setPower(0.075);
+  }
+  private void armuphalf()
+  {
+    while (armposition > -5){
+      
+     clawMotor.setPower(0.25);
+     armposition += clawMotor.getPower();
+       telemetry.addData("PLeft Position:", pleft.getCurrentPosition());
+      telemetry.addData("PRight Position:", pright.getCurrentPosition());
+      telemetry.addData("clawMotor Position:", clawMotor.getCurrentPosition());
+      telemetry.addData("clawMotor variable", armposition);
+      telemetry.update();
+    }
+    clawMotor.setPower(0.075); 
+  }
+  
+  private void selectiveDrive(double targetPosition, int movmentStyle, double speed, int sensor)
+  {
+      int frmotorDir = -1;
+      int  flmotorDir = 1;
+      int  brmotorDir = -1;
+      int  blmotorDir= 1;
+      
+      if (movmentStyle == 1){
+        frmotorDir = -1;
+        flmotorDir = 1;
+        brmotorDir = -1;
+        blmotorDir= 1;
+      }
+      else if (movmentStyle == 2){
+        frmotorDir = 1;
+        flmotorDir = -1;
+        brmotorDir = 1;
+        blmotorDir= -1;
+      } 
+      if (sensor == 0){
+        frmotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frmotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+      if (targetPosition > 0){ 
+        while (frmotor.getCurrentPosition() < targetPosition){
+          
+          frmotor.setPower(speed * frmotorDir);
+          brmotor.setPower(speed * brmotorDir);
+          flmotor.setPower(speed * flmotorDir);
+          blmotor.setPower(speed * blmotorDir);
+          telemetry.addData("FRMotor", frmotor.getCurrentPosition());
+          telemetry.update();
+        }
+      }
+      else{
+        while (frmotor.getCurrentPosition() > targetPosition){
+          frmotor.setPower(speed * frmotorDir);
+          brmotor.setPower(speed * brmotorDir);
+          flmotor.setPower(speed * flmotorDir);
+          blmotor.setPower(speed * blmotorDir);
+          telemetry.addData("FRMotor", frmotor.getCurrentPosition());
+          telemetry.update();
+        }
+      }
+      } 
+      else{
+        frmotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frmotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+      if (targetPosition > 0){ 
+        while (testsensor.getDistance(DistanceUnit.CM) < targetPosition){
+          frmotor.setPower(speed * frmotorDir);
+          brmotor.setPower(speed * brmotorDir);
+          flmotor.setPower(speed * flmotorDir);
+          blmotor.setPower(speed * blmotorDir);
+        }
+      }
+      else{
+        while (testsensor.getDistance(DistanceUnit.CM) > targetPosition){
+          frmotor.setPower(speed * frmotorDir);
+          brmotor.setPower(speed * brmotorDir);
+          flmotor.setPower(speed * flmotorDir);
+          blmotor.setPower(speed * blmotorDir);
+        }
+      }
+      }
+      frmotor.setPower(0);
+    brmotor.setPower(0);
+      flmotor.setPower(0);
+      blmotor.setPower(0);
+  }
+  
+  
+  @Override
+  public void runOpMode() {
+     flmotor = hardwareMap.get(DcMotor.class, "frontleft");
+    frmotor = hardwareMap.get(DcMotor.class, "frontright");
+    blmotor = hardwareMap.get(DcMotor.class, "backleft");
+    brmotor = hardwareMap.get(DcMotor.class, "backright");
+    clawServo = hardwareMap.get(Servo.class,"claw");
+    clawMotor = hardwareMap.get(DcMotor.class, "clawmotor");
+    pleft = hardwareMap.get(DcMotor.class, "pulleyleft");
+    pright = hardwareMap.get(DcMotor.class, "pulleyright");
+    testsensor = hardwareMap.get(DistanceSensor.class, "sense");
+   position = 0;
+    startMotors = true;
+  armposition =0;
+   target = 0;
+  
+  
+    waitForStart();
+  
+    while (opModeIsActive()) {
+      selectiveDrive(-500, 1, 0.3, 0);
+      
+      
+     
+      
+    }
+  }
+}
+   
+
+    

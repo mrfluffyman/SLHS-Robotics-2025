@@ -1,0 +1,99 @@
+package org.firstinspires.ftc.teamcode;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import android.util.Size;
+@TeleOp(name = "Autonoumostest")
+
+public class Autonoumostest extends LinearOpMode {
+  private DcMotor flmotor;
+  private DcMotor frmotor;
+  private DcMotor blmotor;
+  private DcMotor brmotor;
+  private DistanceSensor testsensor;
+  private double Distance;
+    
+     @Override
+  public void runOpMode() {
+     flmotor = hardwareMap.get(DcMotor.class, "frontleft");
+    frmotor = hardwareMap.get(DcMotor.class, "frontright");
+    blmotor = hardwareMap.get(DcMotor.class, "backleft");
+    brmotor = hardwareMap.get(DcMotor.class, "backright");
+    testsensor = hardwareMap.get(DistanceSensor.class, "testsensor");
+    int phase;
+    int check;
+    waitForStart();
+   check = 0;   
+   phase = 1;
+    while (opModeIsActive()) {
+      Distance = testsensor.getDistance(DistanceUnit.CM);
+      telemetry.addData("Distance (cm)", testsensor.getDistance(DistanceUnit.CM));
+        telemetry.addData("Distance variable", Distance);
+        telemetry.addData("phase", phase);
+        telemetry.addData("check", check);
+        telemetry.update();
+      if (check < 1){  
+      if (phase < 2){
+        
+      
+    if (Distance > 40.00) {
+      
+       frmotor.setPower(-0.1); 
+        flmotor.setPower(0.1);
+        brmotor.setPower(-0.1);
+        blmotor.setPower(0.1);
+    }
+    else{
+        
+        check++;
+    }
+    }
+    else{
+      if (phase < 3 & phase >2){ 
+      if (Distance < 40.00) {
+      frmotor.setPower(0.1); 
+        flmotor.setPower(0.1);
+        brmotor.setPower(0.1);
+        blmotor.setPower(0.1);
+      }
+      else{ 
+        phase++;
+      }
+    }
+    }
+    else{
+      frmotor.setPower(0); 
+        flmotor.setPower(0);
+        brmotor.setPower(0);
+        blmotor.setPower(0);
+    }
+   else{
+        frmotor.setPower(0); 
+        flmotor.setPower(0);
+        brmotor.setPower(0);
+        blmotor.setPower(0);
+        sleep(4000);
+        Distance = testsensor.getDistance(DistanceUnit.CM);
+      if (Distance > 40.00){
+        check--;
+      } 
+      else{
+        check--;
+        phase++;
+      }
+      }
+    }
+    }  
+   }
+        
+         
+ 
+        
+  
+
+
+    
